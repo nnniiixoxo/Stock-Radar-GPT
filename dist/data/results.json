@@ -1,7 +1,1 @@
-{
-  "status": "setup_required",
-  "generated_at": null,
-  "base_date": null,
-  "scanned_count": 0,
-  "stocks": []
-}
+{"status":"ok","generated_at":"2026-09-10T06:20:31.469221+00:00","base_date":"20260910","scanned_count":0,"successful_count":0,"error_count":0,"stocks":[],"errors":[]}
