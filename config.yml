@@ -1,0 +1,21 @@
+markets: [KOSPI, KOSDAQ]
+include_all_listed: true
+exclude:
+  etf: true
+  etn: true
+  halted: true
+history_days: 90
+workers: 5
+scoring:
+  ma_alignment: 2
+  ma20_rising: 1
+  ma60_rising: 1
+  rsi_35_50: 1
+  rsi_turn_up: 2
+  disparity_rebound: 2
+  rvol_2x: 2
+  trading_value_increase: 1
+thresholds:
+  interest: 8
+  candidate: 10
+  strong: 12
