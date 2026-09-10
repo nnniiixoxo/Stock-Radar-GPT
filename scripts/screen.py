@@ -51,10 +51,20 @@ def analyze(ticker,name,market,start,end,cfg):
 
 def main():
     cfg=yaml.safe_load((ROOT/'config.yml').read_text(encoding='utf-8'))
-    end=KST.strftime('%Y%m%d');start=(KST-timedelta(days=cfg.get('history_days',90)*2)).strftime('%Y%m%d')
+    requested_end=KST.strftime('%Y%m%d')
+    # 장중·휴일에는 당일 종가 데이터가 아직 없어 빈 목록이 반환될 수 있으므로
+    # KRX가 제공하는 가장 가까운 실제 거래일을 기준일로 사용한다.
+    end=stock.get_nearest_business_day_in_a_week(date=requested_end)
+    start=(datetime.strptime(end,'%Y%m%d').replace(tzinfo=KST.tzinfo)-timedelta(days=cfg.get('history_days',90)*2)).strftime('%Y%m%d')
     universe=[]
     for market in cfg['markets']:
-        for ticker in stock.get_market_ticker_list(end,market=market): universe.append((ticker,stock.get_market_ticker_name(ticker),market))
+        tickers=stock.get_market_ticker_list(end,market=market)
+        if not tickers:
+            tickers=stock.get_market_ticker_list(market=market)
+        for ticker in tickers:
+            universe.append((ticker,stock.get_market_ticker_name(ticker),market))
+    if not universe:
+        raise RuntimeError(f'KRX 종목 목록이 비어 있습니다. 조회 기준일: {end}')
     results=[];errors=[]
     with ThreadPoolExecutor(max_workers=cfg.get('workers',5)) as pool:
         futures={pool.submit(analyze,*item,start,end,cfg):item for item in universe}
