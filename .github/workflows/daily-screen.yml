@@ -36,8 +36,8 @@ jobs:
 
       - name: Scan KOSPI and KOSDAQ
         if: steps.check.outcome == 'failure' || github.event_name == 'workflow_dispatch'
-        run: python scripts/screen_naver_fixed.py
-
+        rrun: python scripts/screen_naver_fixed_v2.py
+        
       - name: Commit result
         if: steps.check.outcome == 'failure' || github.event_name == 'workflow_dispatch'
         run: |
