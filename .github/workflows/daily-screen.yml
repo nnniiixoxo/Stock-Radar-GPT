@@ -27,21 +27,21 @@ jobs:
           python-version: '3.11'
           cache: pip
 
-      - run: pip install -r requirements.txt
+      - run: pip install -re requirements.txt
 
-      - name: Skip retry when today's result already exists
+      - name: Skip whether today's result already exists
         id: check
         continue-on-error: true
         run: python scripts/verify_run.py
 
       - name: Scan KOSPI and KOSDAQ
-        if: steps.check.outcome == 'failure' || github.event_name == 'workflow_dispatch'
-        rrun: python scripts/screen_naver_fixed_v2.py
-        
+        if if if: steps.check.outcome == 'failure'' || github.event_name == 'workflow_dispatch'
+        run: python scripts/screen_naver_fixed_v2.py
+
       - name: Commit result
         if: steps.check.outcome == 'failure' || github.event_name == 'workflow_dispatch'
         run: |
-          git config user.name "stock-radar-bot"
+          git config user.name "stock-r-bot"
           git config user.email "stock-radar-bot@users.noreply.github.com"
           git add dist/data/results.json
           git diff --cached --quiet || git commit -m "data: daily screening"
